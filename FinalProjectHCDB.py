@@ -1,7 +1,7 @@
 
 # ========================================================
 # VisitGuard Health
-# Appointment Scheduling System
+# Case Management Appointment System
 # ========================================================
 
 case_managers = [
@@ -10,28 +10,16 @@ case_managers = [
     "Case Manager Wilson"
 ]
 
-# preset appointment dates ( we can switch if needed)
-appointment_dates = [
-    "05/15/2026",
-    "05/16/2026",
-    "05/17/2026"
-]
-
-# preset appointment times
-time_slots = [
-    "9AM",
-    "10AM",
-    "11AM",
-    "1PM",
-    "2PM",
-    "3PM"
+# preset appointments
+appointments = [
+    "05/15/2026 - 8AM",
+    "05/15/2026 - 11AM",
+    "05/15/2026 - 4PM",
 ]
 
 
 # -------------------------------
-# Name validiation
-# it needs more than 3 letters 
-# its only alpha 
+# NAME VALIDATION
 # -------------------------------
 def get_name():
 
@@ -41,11 +29,13 @@ def get_name():
             "\nEnter full name: "
         ).strip()
 
+        # remove spaces
         check_name = name.replace(
             " ",
             ""
         )
 
+        # minimum length
         if len(check_name) < 3:
 
             print(
@@ -55,6 +45,7 @@ def get_name():
 
             continue
 
+        # letters only
         if not check_name.isalpha():
 
             print(
@@ -68,7 +59,10 @@ def get_name():
 
 
 # -------------------------------
-# DOB that accepts both formats
+# DOB VALIDATION
+# accepts:
+# MMDDYYYY
+# MM/DD/YYYY
 # -------------------------------
 def get_dob():
 
@@ -79,11 +73,13 @@ def get_dob():
             "(MM/DD/YYYY): "
         ).strip()
 
+        # remove slashes
         clean_dob = dob.replace(
             "/",
             ""
         )
 
+        # must equal 8 digits
         if len(clean_dob) != 8:
 
             print(
@@ -93,6 +89,7 @@ def get_dob():
 
             continue
 
+        # numbers only
         if not clean_dob.isdigit():
 
             print(
@@ -106,24 +103,28 @@ def get_dob():
         day = int(clean_dob[2:4])
         year = int(clean_dob[4:8])
 
+        # validate month
         if month < 1 or month > 12:
 
             print("Invalid month.")
 
             continue
 
+        # validate day
         if day < 1 or day > 31:
 
             print("Invalid day.")
 
             continue
 
+        # validate year
         if year < 1900 or year > 2026:
 
             print("Invalid year.")
 
             continue
 
+        # format DOB
         formatted_dob = (
             clean_dob[0:2] + "/" +
             clean_dob[2:4] + "/" +
@@ -134,11 +135,11 @@ def get_dob():
 
 
 # -------------------------------
-# Case manager picking
+# CHOOSE CASE MANAGER
 # -------------------------------
 def choose_case_manager():
 
-    print("\nCase Managers:")
+    print("\nAvailable Case Managers:")
 
     for i in range(
         len(case_managers)
@@ -173,51 +174,13 @@ def choose_case_manager():
 
 
 # -------------------------------
-# Choosing day
+# CHOOSE APPOINTMENT
+# prevents double booking
+# remembers appointments
 # -------------------------------
-def choose_date():
+def choose_appointment():
 
-    print("\nAvailable Dates:")
-
-    for i in range(
-        len(appointment_dates)
-    ):
-
-        print(
-            i + 1,
-            "-",
-            appointment_dates[i]
-        )
-
-    while True:
-
-        choice = input(
-            "Select date number: "
-        ).strip()
-
-        if choice.isdigit():
-
-            choice = int(choice)
-
-            if (
-                1 <= choice <=
-                len(appointment_dates)
-            ):
-
-                return appointment_dates[
-                    choice - 1
-                ]
-
-        print("Invalid selection.")
-
-
-# -------------------------------
-# Choosing time
-# 
-# -------------------------------
-def choose_time(date):
-
-    booked_times = []
+    booked_appointments = []
 
     # read booked appointments
     try:
@@ -231,56 +194,54 @@ def choose_time(date):
 
             data = line.strip().split(",")
 
-            booked_date = data[3]
-            booked_time = data[4]
-
-            if booked_date == date:
-
-                booked_times.append(
-                    booked_time
-                )
+            # appointment stored at index 3
+            booked_appointments.append(
+                data[3]
+            )
 
         file.close()
 
     except:
         pass
 
-    available_times = []
+    available_appointments = []
 
-    for time in time_slots:
+    # remove booked appointments
+    for appt in appointments:
 
-        if time not in booked_times:
+        if appt not in booked_appointments:
 
-            available_times.append(
-                time
+            available_appointments.append(
+                appt
             )
 
-    # no times left
-    if available_times == []:
+    # no appointments left
+    if available_appointments == []:
 
         print(
-            "No appointments available "
-            "for this date."
+            "No appointments available."
         )
 
         return None
 
-    print("\nAvailable Times:")
+    print(
+        "\nAvailable Appointments:"
+    )
 
     for i in range(
-        len(available_times)
+        len(available_appointments)
     ):
 
         print(
             i + 1,
             "-",
-            available_times[i]
+            available_appointments[i]
         )
 
     while True:
 
         choice = input(
-            "Select time number: "
+            "Select appointment number: "
         ).strip()
 
         if choice.isdigit():
@@ -289,10 +250,10 @@ def choose_time(date):
 
             if (
                 1 <= choice <=
-                len(available_times)
+                len(available_appointments)
             ):
 
-                return available_times[
+                return available_appointments[
                     choice - 1
                 ]
 
@@ -300,44 +261,51 @@ def choose_time(date):
 
 
 # -------------------------------
-# confirming code
+# GENERATE CONFIRMATION CODE
 # -------------------------------
 def generate_code(
     name,
     dob,
-    time
+    appointment
 ):
 
-    text = name + dob + time
+    text = (
+        name +
+        dob +
+        appointment
+    )
 
     number_string = ""
 
+    # convert characters to ASCII
     for char in text:
 
         number_string += str(
             ord(char)
         )
 
+    # reverse numbers
     reversed_numbers = (
         number_string[::-1]
     )
 
+    # take every other character
     mixed = reversed_numbers[::2]
 
+    # final code
     code = "CM-" + mixed[:6]
 
     return code
 
 
 # -------------------------------
-# Saving appt
+# SAVE APPOINTMENT
 # -------------------------------
 def save_appointment(
     name,
     dob,
     manager,
-    date,
-    time,
+    appointment,
     code
 ):
 
@@ -352,8 +320,7 @@ def save_appointment(
             name + "," +
             dob + "," +
             manager + "," +
-            date + "," +
-            time + "," +
+            appointment + "," +
             code + "\n"
         )
 
@@ -362,19 +329,18 @@ def save_appointment(
     except:
 
         print(
-            " Now saving appointment."
+            "Now saving appointment."
         )
 
 
 # -------------------------------
-# Confiming appt
+# CONFIRM APPOINTMENT
 # -------------------------------
 def confirm(
     name,
     dob,
     manager,
-    date,
-    time
+    appointment
 ):
 
     print(
@@ -384,8 +350,10 @@ def confirm(
     print("Name:", name)
     print("DOB:", dob)
     print("Case Manager:", manager)
-    print("Date:", date)
-    print("Time:", time)
+    print(
+        "Appointment:",
+        appointment
+    )
 
     while True:
 
@@ -394,20 +362,20 @@ def confirm(
             "(yes/no): "
         ).lower()
 
+        # confirmed
         if answer == "yes":
 
             code = generate_code(
                 name,
                 dob,
-                time
+                appointment
             )
 
             save_appointment(
                 name,
                 dob,
                 manager,
-                date,
-                time,
+                appointment,
                 code
             )
 
@@ -427,6 +395,7 @@ def confirm(
 
             quit()
 
+        # cancelled
         elif answer == "no":
 
             print(
@@ -458,24 +427,20 @@ while True:
 
     dob = get_dob()
 
-    # manager
+    # choose manager
     manager = choose_case_manager()
 
-    # appointment date
-    date = choose_date()
+    # choose appointment
+    appointment = choose_appointment()
 
-    # appointment time
-    time = choose_time(date)
-
-    if time is None:
+    if appointment is None:
 
         break
 
-    # confirmation
+    # confirm appointment
     confirm(
         name,
         dob,
         manager,
-        date,
-        time
+        appointment
     )
