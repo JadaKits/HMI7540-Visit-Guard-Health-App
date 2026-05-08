@@ -1,6 +1,5 @@
 # ==========================================
 # Case Management Appointment System
-# Name: NICOLE PABLO FLORES
 # ==========================================
 
 case_managers = [
@@ -358,7 +357,7 @@ def confirm(
 # MAIN PROGRAM LOOP
 # -------------------------------
 print(
-    "Welcome NICOLE PABLO FLORES "
+    "Welcome to our "
     "- Case Management "
     "Appointment System"
 )
