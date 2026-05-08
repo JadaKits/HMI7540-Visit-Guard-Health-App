@@ -17,7 +17,34 @@ time_slots = [
     "2PM",
     "3PM"
 ]
+# Loading and savinf time slots
+# -------------------------------
+def load_slots():
 
+    try:
+        file = open("slots.txt", "r")
+        data = file.read().split(",")
+        file.close()
+
+        slots = [s for s in data if s]
+
+        if len(slots) == 0:
+            return DEFAULT_SLOTS.copy()
+
+        return slots
+
+    except:
+        return DEFAULT_SLOTS.copy()
+
+
+def save_slots(slots):
+
+    file = open("slots.txt", "w")
+    file.write(",".join(slots))
+    file.close()
+
+
+time_slots = load_slots()
 
 # -------------------------------
 # Validating the name
@@ -157,8 +184,31 @@ def choose_case_manager():
                 ]
 
         print("Invalid selection.")
+        
+# time slots and removing already booked when ran again
+def choose_time():
 
+    global time_slots
 
+    if len(time_slots) == 0:
+        print("No appointments available.")
+        return None
+
+    print("\nAvailable Time Slots:")
+    print(time_slots)
+
+    while True:
+
+        choice = input("Choose a time exactly as shown: ").strip().upper()
+
+        if choice in time_slots:
+
+            time_slots.remove(choice)
+            save_slots(time_slots)
+
+            return choice
+
+        print("That time is not available.")
 # -------------------------------
 # Time slot it is selecting
 # will also prevent double booking
