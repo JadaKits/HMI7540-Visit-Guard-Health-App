@@ -1,12 +1,6 @@
-import os
-
-# Save file in a safe writable location (user home folder)
-FILE_PATH = os.path.expanduser("~/appointments.txt")
-
-
 # ========================================================
 # VisitGuard Health
-# SCHEDULING APPOINTMENT SYSTEM
+# Case Management Appointment System
 # ========================================================
 
 case_managers = [
@@ -15,157 +9,313 @@ case_managers = [
     "Case Manager Wilson"
 ]
 
+# preset appointments
 appointments = [
-    "05/15/2026 - 9AM",
-    "05/15/2026 - 10AM",
+    "05/15/2026 - 8AM",
     "05/15/2026 - 11AM",
+    "05/15/2026 - 12PM",
+
 ]
 
 
 # -------------------------------
-# NAME VALIDATION FOR PERSON
-# HAS TO BE MORE THAN 3 LETTERS
-#ONLY LETTERS
+# NAME VALIDATION
 # -------------------------------
 def get_name():
 
     while True:
 
-        name = input("\nEnter full name: ").strip()
-        check_name = name.replace(" ", "")
+        name = input(
+            "\nEnter full name: "
+        ).strip()
 
+        # remove spaces
+        check_name = name.replace(
+            " ",
+            ""
+        )
+
+        # minimum length
         if len(check_name) < 3:
-            print("Name must be at least 3 letters.")
+
+            print(
+                "Name must contain "
+                "at least 3 letters."
+            )
+
             continue
 
+        # letters only
         if not check_name.isalpha():
-            print("Name can only contain letters.")
+
+            print(
+                "Name can only "
+                "contain letters."
+            )
+
             continue
 
         return name.title()
 
 
 # -------------------------------
-# DOB VALIDATION PICKS EITHER 11111999 \ 11/11/1999
+# DOB VALIDATION
+# accepts:
+# MMDDYYYY
+# MM/DD/YYYY
 # -------------------------------
 def get_dob():
 
     while True:
 
-        dob = input("Enter DOB (MM/DD/YYYY or MMDDYYYY): ").strip()
-        clean = dob.replace("/", "")
+        dob = input(
+            "Enter DOB "
+            "(MM/DD/YYYY): "
+        ).strip()
 
-        if len(clean) != 8 or not clean.isdigit():
-            print("Invalid DOB format.")
+        # remove slashes
+        clean_dob = dob.replace(
+            "/",
+            ""
+        )
+
+        # must equal 8 digits
+        if len(clean_dob) != 8:
+
+            print(
+                "DOB must contain "
+                "8 numbers."
+            )
+
             continue
 
-        month = int(clean[0:2])
-        day = int(clean[2:4])
-        year = int(clean[4:8])
+        # numbers only
+        if not clean_dob.isdigit():
 
+            print(
+                "DOB must contain "
+                "only numbers."
+            )
+
+            continue
+
+        month = int(clean_dob[0:2])
+        day = int(clean_dob[2:4])
+        year = int(clean_dob[4:8])
+
+        # validate month
         if month < 1 or month > 12:
+
             print("Invalid month.")
+
             continue
 
+        # validate day
         if day < 1 or day > 31:
+
             print("Invalid day.")
+
             continue
 
+        # validate year
         if year < 1900 or year > 2026:
+
             print("Invalid year.")
+
             continue
 
-        return f"{clean[0:2]}/{clean[2:4]}/{clean[4:8]}"
+        # format DOB
+        formatted_dob = (
+            clean_dob[0:2] + "/" +
+            clean_dob[2:4] + "/" +
+            clean_dob[4:8]
+        )
+
+        return formatted_dob
 
 
 # -------------------------------
-# CASE MANAGER  CHOOSING WHICH ONE
+# CHOOSE CASE MANAGER
 # -------------------------------
 def choose_case_manager():
 
     print("\nAvailable Case Managers:")
 
-    for i, cm in enumerate(case_managers):
-        print(i + 1, "-", cm)
+    for i in range(
+        len(case_managers)
+    ):
+
+        print(
+            i + 1,
+            "-",
+            case_managers[i]
+        )
 
     while True:
 
-        choice = input("Select manager number: ").strip()
+        choice = input(
+            "Select manager number: "
+        ).strip()
 
         if choice.isdigit():
+
             choice = int(choice)
 
-            if 1 <= choice <= len(case_managers):
-                return case_managers[choice - 1]
+            if (
+                1 <= choice <=
+                len(case_managers)
+            ):
+
+                return case_managers[
+                    choice - 1
+                ]
 
         print("Invalid selection.")
 
 
 # -------------------------------
-# APPOINTMENTS FOR THE PATIENTS    
+# CHOOSE APPOINTMENT
+# prevents double booking
+# remembers appointments
 # -------------------------------
 def choose_appointment():
 
-    booked = []
+    booked_appointments = []
 
-    # safely read file
-    if os.path.exists(FILE_PATH):
+    # read booked appointments
+    try:
 
-        with open(FILE_PATH, "r") as file:
-            for line in file:
-                parts = line.strip().split(",")
+        file = open(
+            "appointments.txt",
+            "r"
+        )
 
-                if len(parts) >= 4:
-                    booked.append(parts[3])
+        for line in file:
 
-    available = [a for a in appointments if a not in booked]
+            data = line.strip().split(",")
 
-    if not available:
-        print("No appointments available.")
+            # appointment stored at index 3
+            booked_appointments.append(
+                data[3]
+            )
+
+        file.close()
+
+    except:
+        pass
+
+    available_appointments = []
+
+    # remove booked appointments
+    for appt in appointments:
+
+        if appt not in booked_appointments:
+
+            available_appointments.append(
+                appt
+            )
+
+    # no appointments left
+    if available_appointments == []:
+
+        print(
+            "No appointments available."
+        )
+
         return None
 
-    print("\nAvailable Appointments:")
+    print(
+        "\nAvailable Appointments:"
+    )
 
-    for i, appt in enumerate(available):
-        print(i + 1, "-", appt)
+    for i in range(
+        len(available_appointments)
+    ):
+
+        print(
+            i + 1,
+            "-",
+            available_appointments[i]
+        )
 
     while True:
 
-        choice = input("Select appointment number: ").strip()
+        choice = input(
+            "Select appointment number: "
+        ).strip()
 
         if choice.isdigit():
 
             choice = int(choice)
 
-            if 1 <= choice <= len(available):
-                return available[choice - 1]
+            if (
+                1 <= choice <=
+                len(available_appointments)
+            ):
+
+                return available_appointments[
+                    choice - 1
+                ]
 
         print("Invalid selection.")
 
 
 # -------------------------------
-# CONFIRMATION CODE FOR THE CLIENT
+# GENERATE CONFIRMATION CODE
 # -------------------------------
-def generate_code(name, dob, appointment):
+def generate_code(
+    name,
+    dob,
+    appointment
+):
 
-    text = name + dob + appointment
-    numbers = ""
+    text = (
+        name +
+        dob +
+        appointment
+    )
 
-    for c in text:
-        numbers += str(ord(c))
+    number_string = ""
 
-    reversed_nums = numbers[::-1]
-    mixed = reversed_nums[::2]
+    # convert characters to ASCII
+    for char in text:
 
-    return "CM-" + mixed[:6]
+        number_string += str(
+            ord(char)
+        )
+
+    # reverse numbers
+    reversed_numbers = (
+        number_string[::-1]
+    )
+
+    # take every other character
+    mixed = reversed_numbers[::2]
+
+    # final code
+    code = "CM-" + mixed[:6]
+
+    return code
 
 
 # -------------------------------
-# SAVE APPOINTMENT FOR CLIENT
+# SAVE APPOINTMENT
 # -------------------------------
-def save_appointment(name, dob, manager, appointment, code):
+def save_appointment(
+    name,
+    dob,
+    manager,
+    appointment,
+    code
+):
 
-    with open(FILE_PATH, "a") as file:
+    try:
+
+        file = open(
+            "appointments.txt",
+            "a"
+        )
+
         file.write(
             name + "," +
             dob + "," +
@@ -174,54 +324,123 @@ def save_appointment(name, dob, manager, appointment, code):
             code + "\n"
         )
 
+        file.close()
+
+    except:
+
+        print(
+            “Loading appointment confirmation...”
+        )
+
 
 # -------------------------------
-# CONFIRMATION OF THE APPT
+# CONFIRM APPOINTMENT
 # -------------------------------
-def confirm(name, dob, manager, appointment):
+def confirm(
+    name,
+    dob,
+    manager,
+    appointment
+):
 
-    print("\nAppointment Summary")
+    print(
+        "\nAppointment Summary"
+    )
+
     print("Name:", name)
     print("DOB:", dob)
     print("Case Manager:", manager)
-    print("Appointment:", appointment)
+    print(
+        "Appointment:",
+        appointment
+    )
 
     while True:
 
-        answer = input("\nConfirm appointment? (yes/no): ").lower()
+        answer = input(
+            "\nConfirm appointment? "
+            "(yes/no): "
+        ).lower()
 
+        # confirmed
         if answer == "yes":
 
-            code = generate_code(name, dob, appointment)
-            save_appointment(name, dob, manager, appointment, code)
+            code = generate_code(
+                name,
+                dob,
+                appointment
+            )
 
-            print("\nAppointment booked!")
-            print("Confirmation Number:", code)
+            save_appointment(
+                name,
+                dob,
+                manager,
+                appointment,
+                code
+            )
+
+            print(
+                "\nAppointment booked!"
+            )
+
+            print(
+                "Confirmation Number:",
+                code
+            )
+
+            print(
+                "\nThank you for choosing "
+                "VisitGuard Health!"
+            )
 
             quit()
 
+        # cancelled
         elif answer == "no":
 
-            print("Cancelled.")
+            print(
+                "Appointment cancelled."
+            )
+
             quit()
 
         else:
-            print("Enter yes or no.")
+
+            print(
+                "Please enter yes or no."
+            )
 
 
-# -------------------------------
-# MAIN
-# -------------------------------
-print("Welcome to VisitGuard Health")
+# ========================================================
+# MAIN PROGRAM
+# ========================================================
+
+print(
+    "Welcome to "
+    "VisitGuard Health"
+)
 
 while True:
 
+    # patient info
     name = get_name()
+
     dob = get_dob()
+
+    # choose manager
     manager = choose_case_manager()
+
+    # choose appointment
     appointment = choose_appointment()
 
     if appointment is None:
+
         break
 
-    confirm(name, dob, manager, appointment)
+    # confirm appointment
+    confirm(
+        name,
+        dob,
+        manager,
+        appointment
+    )
