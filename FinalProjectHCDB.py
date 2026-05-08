@@ -1,6 +1,6 @@
-# ==========================================
-# Case Management Appointment System
-# ==========================================
+# ========================================================
+# VisitGuard Health (Case Management Appointment System)
+# ========================================================
 
 case_managers = [
     "Case Manager Brown",
