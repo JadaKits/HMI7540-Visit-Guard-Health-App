@@ -4,7 +4,7 @@ Home Visit Scheduling App
 ## Project Description
 This project is a heatlhcare appointment scheduling application developed to allow clients to schedule home visits through an app-based system.
 
-##Features
+## Features
 - Name Validation
 - Date of Birth Validation
 - Case Manager Selection
