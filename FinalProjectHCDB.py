@@ -357,9 +357,8 @@ def confirm(
 # MAIN PROGRAM LOOP
 # -------------------------------
 print(
-    "Welcome to the "
-    "Case Management "
-    "Appointment System"
+    "Welcome to "
+    "VisitGuard Health"
 )
 
 while True:
@@ -397,7 +396,7 @@ while True:
             break
 
         elif again == "no":
-            print("Thank you for scheduling with us today!")
+            print("Thank you for choosing VisitGuard Health!")
             quit()
 
         else:
