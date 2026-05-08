@@ -21,10 +21,10 @@ time_slots = [
 
 
 # -------------------------------
-# NAME VALIDATION
-# only letters
-# minimum 3 characters
-# loops until valid
+# Validating the name
+#and it will contain only letters
+# minimum 3 characters for the name
+# loops until valid input from user
 # -------------------------------
 def get_name():
 
@@ -57,10 +57,9 @@ def get_name():
 
 # -------------------------------
 # DOB VALIDATION
-# accepts:
-# 11221999
-# 11/22/1999
-# loops until valid
+# accepts both types of formats :
+#11221999 AND  11/22/1999
+# loops until there is a valid entry 
 # -------------------------------
 def get_dob():
 
@@ -81,7 +80,7 @@ def get_dob():
             )
             continue
 
-        # numbers only
+        # numbers only for DOB
         if not clean_dob.isdigit():
             print(
                 "DOB must contain only numbers."
@@ -92,7 +91,7 @@ def get_dob():
         day = int(clean_dob[2:4])
         year = int(clean_dob[4:8])
 
-        # validate month
+        # validating month
         if month < 1 or month > 12:
             print("Invalid month.")
             continue
@@ -118,7 +117,7 @@ def get_dob():
 
 
 # -------------------------------
-# GET PATIENT INFO
+# Getting patient  to enter in data
 # -------------------------------
 def get_patient():
 
@@ -130,7 +129,7 @@ def get_patient():
 
 
 # -------------------------------
-# CHOOSE CASE MANAGER
+# Choosing the case manager
 # -------------------------------
 def choose_case_manager():
 
@@ -162,9 +161,9 @@ def choose_case_manager():
 
 
 # -------------------------------
-# TIME SLOT SELECTION
-# prevents double booking
-# removes booked times
+# Time slot it is selecting
+# will also prevent double booking
+# removes booked times once selected
 # -------------------------------
 def choose_time():
 
@@ -203,7 +202,7 @@ def choose_time():
 
 
 # -------------------------------
-# RANDOMIZED CONFIRMATION CODE
+# Randomized conformation codes
 # no imports used
 # -------------------------------
 def generate_code(
@@ -235,7 +234,7 @@ def generate_code(
 
 
 # -------------------------------
-# SAVE APPOINTMENT TO FILE
+# Saves appointment to file
 # -------------------------------
 def save_appointment(
     name,
@@ -269,7 +268,7 @@ def save_appointment(
 
 
 # -------------------------------
-# CONFIRM APPOINTMENT
+# Confirming appointment
 # -------------------------------
 def confirm(
     name,
