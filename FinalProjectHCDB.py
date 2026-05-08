@@ -383,23 +383,6 @@ while True:
         time
     )
 
-    # continue loop
-    while True:
-
-        again = input(
-            "\nWould you like to "
-            "book another appointment? "
-            "(yes/no): "
-        ).lower()
-
-        if again == "yes":
-            break
-
-        elif again == "no":
+ else:
             print("Thank you for choosing VisitGuard Health!")
             quit()
-
-        else:
-            print(
-                "Please enter yes or no."
-            )
