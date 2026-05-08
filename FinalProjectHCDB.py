@@ -357,8 +357,8 @@ def confirm(
 # MAIN PROGRAM LOOP
 # -------------------------------
 print(
-    "Welcome to our "
-    "- Case Management "
+    "Welcome to the "
+    "Case Management "
     "Appointment System"
 )
 
